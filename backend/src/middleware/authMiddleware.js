@@ -25,7 +25,7 @@
         next();
     }
     catch(err){
-        console.log("Error in protectRoute middleware " , error);
+        console.log("Error in protectRoute middleware ",err);
         res.status(500).json({message : "Internal server error"});
     }
  }
