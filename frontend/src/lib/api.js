@@ -21,7 +21,9 @@ export const getAuthUser = async()=>{
       return res.data;
       }
       catch(err){
-            console.log("Error in getAuthUser :",err);
+            if (err?.response?.status !== 401) {
+                  console.log("Error in getAuthUser :",err);
+            }
             return null;
       }
 }
