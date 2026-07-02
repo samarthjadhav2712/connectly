@@ -31,6 +31,8 @@ export async function login(req, res) {
 
         // set token in httpOnly cookie
         res.cookie("jwt" , token , getCookieOptions());
+        console.log("Cookie options:", getCookieOptions());
+console.log("Cookie being set:", token.substring(0, 20));
 
         res.status(200).json({message : "success" , user});
     }
