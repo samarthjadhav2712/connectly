@@ -7,6 +7,7 @@ import ChatLoader from '../components/ChatLoader';
 import { StreamChat } from 'stream-chat';
 import toast from 'react-hot-toast';
 import CallButton from "../components/CallButton"
+import { getAvatarSrc } from "../lib/avatar";
 import {
     Channel,
     ChannelHeader,
@@ -42,7 +43,7 @@ const ChatPage = () => {
                 await client.connectUser({
                     id: authUser._id,
                     name: authUser.fullName,
-                    image: authUser.profilePic,
+                    image: getAvatarSrc(authUser),
                 }, tokenData.token);
 
                 const channelId = [authUser._id, targetUserId].sort().join("-");

@@ -8,6 +8,7 @@ import { ShuffleIcon } from "lucide-react";
 import { LANGUAGES } from "../constants";
 import { MapPinIcon } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { cacheAvatarSrc, createAvatarDataUri, getAvatarSrc } from "../lib/avatar";
 
 const OnBoardingPage = () => {
 	const { authUser } = useAuthUser();
@@ -19,7 +20,7 @@ const OnBoardingPage = () => {
 		nativeLanguage: authUser?.nativeLanguage || "",
 		learningLanguage: authUser?.learningLanguage || "",
 		location: authUser?.location || "",
-		profilePic: authUser?.profilePic || "",
+		profilePic: getAvatarSrc(authUser),
 	});
 
 	const { mutate: onboardingMutation, isPending } = useMutation({
@@ -47,8 +48,9 @@ const OnBoardingPage = () => {
 	};
 
 	const handleRandomAvatar = () => {
-		const idx = Math.floor(Math.random() * 100) + 1;
-		const randomAvatar = `https://avatar.iran.liara.run/public/${idx}`;
+		const seed = Math.random().toString(36).slice(2, 10);
+		const randomAvatar = createAvatarDataUri(seed, formState.fullName || authUser?.fullName || "User");
+		cacheAvatarSrc(authUser, randomAvatar);
 		setFormState({ ...formState, profilePic: randomAvatar });
 		toast.success("Random profile picture generated!");
 	};

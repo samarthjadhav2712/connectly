@@ -3,6 +3,7 @@ import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import { getFriendRequests, acceptFriendRequest } from "../lib/api"; 
 import { MessageSquareIcon, UserCheckIcon, BellIcon, ClockIcon } from "lucide-react"; 
 import NoNotificationsFound from "../components/NoNotificationsFound";
+import { getAvatarSrc } from "../lib/avatar";
 
 const NotificationPage = () => {
     const queryClient = useQueryClient();
@@ -55,7 +56,7 @@ const NotificationPage = () => {
                                                         <div className="avatar w-14 h-14 rounded-full bg-base-300">
                                                             {/* Added rounded-full to the img div for consistency */}
                                                             <div className='rounded-full'>
-                                                                <img src={request.sender.profilePic} alt={request.sender.fullName} />
+                                                                <img src={getAvatarSrc(request.sender)} alt={request.sender.fullName} />
                                                             </div>
                                                         </div>
                                                         <div>
@@ -104,10 +105,7 @@ const NotificationPage = () => {
                                                     <div className="avatar mt-1 size-10 rounded-full">
                                                         {/* Added rounded-full to the img div for consistency */}
                                                         <div className='rounded-full'>
-                                                            <img
-                                                                src={notification.recipient.profilePic}
-                                                                alt={notification.recipient.fullName}
-                                                            />
+                                                            <img src={getAvatarSrc(notification.recipient)} alt={notification.recipient.fullName} />
                                                         </div>
                                                     </div>
                                                     <div className="flex-1">

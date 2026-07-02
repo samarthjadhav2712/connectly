@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { logout } from "../lib/api";
 import { ShieldCheck, BellIcon, LogOutIcon } from "lucide-react"; // Make sure imports are correct
 import ThemeSelector from "./ThemeSelector";
+import { getAvatarSrc } from "../lib/avatar";
 
 const Navbar = () => {
     const { authUser } = useAuthUser();
@@ -45,7 +46,7 @@ const Navbar = () => {
                         {/*AVATAR */}
                         <div className='avatar'>
                             <div className='w-9 rounded-full'>
-                                <img src={authUser?.profilePic} alt='User Avatar' />
+                                <img src={getAvatarSrc(authUser)} alt='User Avatar' />
                             </div>
                         </div>
 

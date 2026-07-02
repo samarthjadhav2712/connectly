@@ -2,6 +2,14 @@ import { upsertStreamUser } from '../lib/stream.js';
 import User from '../models/user.js';
 import jwt from 'jsonwebtoken';
 
+const getCookieOptions = () => ({
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    path: '/',
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+});
+
 export async function login(req, res) {
     try{
         const {email , password} = req.body;
@@ -22,12 +30,7 @@ export async function login(req, res) {
         const token = jwt.sign({userId  : user._id} , process.env.JWT_SECRET , {expiresIn : '7d'});
 
         // set token in httpOnly cookie
-        res.cookie("jwt" , token , {
-            httpOnly : true, // to prevent XSS attacks
-            secure : process.env.NODE_ENV === 'production', // set secure flag in production
-            sameSite : 'strict', // to prevent CSRF attacks
-            maxAge : 7*24*60*60*1000, // 7 days
-        });
+        res.cookie("jwt" , token , getCookieOptions());
 
         res.status(200).json({message : "success" , user});
     }
@@ -88,12 +91,7 @@ export async function signup(req, res) {
         const token = jwt.sign({ userId: newUser._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
         // set token in httpOnly cookie
-        res.cookie("jwt", token, {
-            httpOnly: true, // to prevent XSS attacks
-            secure: process.env.NODE_ENV === 'production', // set secure flag in production
-            sameSite: 'strict', // to prevent CSRF attacks
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-        });
+        res.cookie("jwt", token, getCookieOptions());
 
         res.status(201).json({ success: true, user: newUser });
     }
@@ -104,7 +102,7 @@ export async function signup(req, res) {
 }
 
 export async function logout(req, res) {
-    res.clearCookie("jwt");
+    res.clearCookie("jwt", getCookieOptions());
     res.status(200).json({success: true , message : "Logout successfully !"});
 }
 
@@ -112,7 +110,7 @@ export async function onBoard(req , res){
     try{
         const userId = req.user._id;
 
-        const {fullName , bio , nativeLanguage , learningLanguage , location } = req.body;
+        const {fullName , bio , nativeLanguage , learningLanguage , location , profilePic } = req.body;
 
         if(!fullName || !bio || !nativeLanguage || !learningLanguage || !location){
             return res.status(400).json({
@@ -133,6 +131,7 @@ export async function onBoard(req , res){
             nativeLanguage: nativeLanguage,
             learningLanguage: learningLanguage,
             location: location,
+            ...(profilePic ? { profilePic } : {}),
             isOnBoarded : true,
         } , {new : true})
 
@@ -140,11 +139,13 @@ export async function onBoard(req , res){
 
         try{
         // update the user in Stream 
-        await upsertStreamUser({
-            id : updatedUser._id.toString(),
-            name : updatedUser.fullName,
-            image : updatedUser.profilePic || "",
-        });
+        await upsertStreamUser([
+            {
+                id : updatedUser._id.toString(),
+                name : updatedUser.fullName,
+                image : updatedUser.profilePic || "",
+            },
+        ]);
         console.log(`Stream user updated after onBoarding for ${updatedUser.fullName}`);
         }
         catch(err){

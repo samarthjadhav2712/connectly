@@ -6,6 +6,7 @@ import NoFriendsFound from '../components/NoFriendsFound';
 import { Link } from 'react-router';
 import { UsersIcon, MapPinIcon, CheckCircleIcon, UserPlusIcon } from 'lucide-react';
 import { getLanguageFlag } from '../components/FriendCard';
+import { getAvatarSrc } from '../lib/avatar';
 
 // Helper function defined at the top
 const capitalize = (str) => {
@@ -118,7 +119,7 @@ const HomePage = () => {
                                         <div className='card-body p-5 space-y-4'>
                                             <div className='flex items-center gap-3'>
                                                 <div className='avatar size-16 rounded-full'>
-                                                    <img src={user.profilePic} alt={user.fullName} />
+                                                    <img src={getAvatarSrc(user)} alt={user.fullName} />
                                                 </div>
 
                                                 <div>

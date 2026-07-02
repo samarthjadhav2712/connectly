@@ -6,7 +6,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(to bottom, #ffffff, #daffe7);
+  background:
+    radial-gradient(circle at top left, color-mix(in oklab, hsl(var(--p)) 18%, transparent), transparent 28%),
+    radial-gradient(circle at top right, color-mix(in oklab, hsl(var(--s)) 14%, transparent), transparent 24%),
+    linear-gradient(180deg, hsl(var(--b1)), hsl(var(--b2)));
   height: 100%;
 }
 

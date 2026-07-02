@@ -4,6 +4,7 @@ import useAuthUser from "../hooks/useAuthUser";
 import { useQuery } from "@tanstack/react-query";
 import { getStreamToken } from "../lib/api";
 import toast from "react-hot-toast"; // FIX 2: Added toast import
+import { getAvatarSrc } from "../lib/avatar";
 
 import { // FIX 3: Cleaned up formatting
   StreamVideo,
@@ -51,7 +52,7 @@ const CallPage = () => {
         const user = {
           id: authUser._id,
           name: authUser.fullName,
-          image: authUser.profilePic,
+          image: getAvatarSrc(authUser),
         };
 
         videoClient = new StreamVideoClient({

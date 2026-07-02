@@ -1,6 +1,7 @@
 import React from 'react'
 import { LANGUAGE_TO_FLAG } from '../constants/index';
 import { Link } from 'react-router';
+import { getAvatarSrc } from '../lib/avatar';
 
 export function getLanguageFlag(language){
     if (!language) return null;
@@ -29,7 +30,7 @@ const FriendCard = ({ friend }) => {
         <div className='flex items-center gap-3 mb-3'>
           <div className='avatar size-12'>
             <div className='rounded-full'>
-              <img src={friend?.profilePic} alt={friend?.fullName} />
+              <img src={getAvatarSrc(friend)} alt={friend?.fullName} />
             </div>
           </div>
           <h3 className='font-semibold truncate'>{friend?.fullName}</h3>
